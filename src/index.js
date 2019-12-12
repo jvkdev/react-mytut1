@@ -171,7 +171,9 @@ class Game extends React.Component {
     }
     
     return (
-      <div className="game">
+    //   <div className="d-flex p-4 border rounded align-items-center w-100">
+
+      <div className="game p-3 border rounded" >
         <div className="game-board">
           <Board 
             squares={current.squares}
