@@ -1,5 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Switch from './components/ToggleSwitch';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
 
 function Square(props) {
@@ -76,7 +79,8 @@ class Game extends React.Component {
         locations: []
       }],
       stepNumber: 0,     
-      turn: 'X'
+      turn: 'X',
+      sort: false // sort toggle state
     }  
   }
   
@@ -114,6 +118,12 @@ class Game extends React.Component {
     }); 
   }
   
+  toggleSort = () => {
+    this.setState({ 
+        sort: this.state.sort ? false : true
+    });
+  }
+
   jumpTo(step) {
     this.setState({
       stepNumber: step,
@@ -122,14 +132,16 @@ class Game extends React.Component {
   }
 
   render() {
-    const history = this.state.history;
+    let history = this.state.history;
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const gameOver = isGameOver(current.squares);
+
+    const { sort } = this.state;
     
     // Display the location for each move in the format (col, row) in the move history list.
-    const moves = history.map((step, move) => {
-      let desc = (move) ? '#' + move + ' (' + step.locations[move-1] + ')' : 'Game start';
+    let moves = history.map((step, move) => {
+      let desc = (move) ? '(' + step.locations[move-1] + ')' : 'Game start';
       
       return (
         <li key={move}>
@@ -142,6 +154,13 @@ class Game extends React.Component {
       );
     });
 
+    // sort history of moves according to toggle state
+    if (sort) {
+      let arr1 = moves.shift(); // keep game start at the top
+      moves.reverse();
+      moves = [arr1, moves];
+    }
+    
     let status;
     if (winner[0]) {
       status = 'Winner! ' + winner[0];
@@ -160,10 +179,15 @@ class Game extends React.Component {
             hiliteSquares={winner[1]}
           />
         </div>
-        <div className="game-info">
+        <div className="game-info d-flexs p-3 border rounded">
           <div>{status}</div>
           <ol>{moves}</ol>
         </div>
+        <div className="d-flex p-4 ml-4 border rounded align-items-center">
+          <span>Sort ↕&nbsp; </span>
+           <Switch theme="default" className="d-flex" enabled={sort} onStateChanged={this.toggleSort} />
+        </div>
+
       </div>
     );
   }
