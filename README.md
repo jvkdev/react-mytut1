@@ -1,3 +1,12 @@
+## Tic Tac Toe!
+
+This is the "Tutorial:Intro to React". It's a simple implementation of the classic [Tic-Tac-Toe](https://en.wikipedia.org/wiki/Tic-tac-toe) game, aka 'noughts and crosses' in British English.
+
+Did you know that noughts and crosses was one of the first playable computer games ever made? [Sandy Douglas](https://en.wikipedia.org/wiki/Sandy_Douglas) was a British CS professor who created the first graphical computer game at Cambridge in 1952, which ran on the [EDSAC](https://en.wikipedia.org/wiki/EDSAC) computer.
+
+Tutorial URL:
+[https://reactjs.org/tutorial/tutorial.html](https://reactjs.org/tutorial/tutorial.html)
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
