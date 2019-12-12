@@ -31,25 +31,28 @@ class Board extends React.Component {
     
     let hilite = false;
     let [a, b, c] = [null, null, null];
-    
+
     if (this.props.hiliteSquares) {
       [a, b, c] = this.props.hiliteSquares;
     }   
 
-    // Outer loop to create parent
-    for (let i = 0; i < 3; i++) {
-      let children = [];
-      //Inner loop to create children
-      for (let j = 0; j < 3; j++) {
+    // Outer loop to create rows
+    for (let row = 0; row < 3; row++) {
+      let columns = [];
+      
+      //Inner loop to create columns
+      for (let col = 0; col < 3; col++) {
+        
         if (this.props.hiliteSquares) {
           hilite = (cnt === a || cnt === b || cnt === c) ? true : false;
         }
-        children.push(this.renderSquare(cnt, hilite));
+
+        columns.push(this.renderSquare(cnt, hilite));
         hilite = false;
         cnt++;
       }
-      //Create the parent and add the children
-      board.push(<div className="board-row">{children}</div>);
+      //Create the row and add the columns
+      board.push(<div className="board-row">{columns}</div>);
     }
     return board;
   }
