@@ -73,6 +73,7 @@ class Game extends React.Component {
     this.state = {
       history: [{
         squares: Array(9).fill(null),
+        locations: []
       }],
       stepNumber: 0,     
       turn: 'X'
@@ -81,8 +82,16 @@ class Game extends React.Component {
   
   handleClick(i) {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
+    
     const current = history[history.length - 1];
     const squares = current.squares.slice();
+
+    const locations = current.locations.slice();
+    
+    // calculate this square's position
+    const row = Math.floor(i / 3);
+    const col = i % 3;
+    const location = (col + 1) + ',' + (row + 1);
 
     if (calculateWinner(squares)[0] || squares[i]) {
       return;
@@ -90,15 +99,18 @@ class Game extends React.Component {
     squares[i] = this.state.turn;
     // calculate next turn:
     const turn = this.state.turn === "X" ? "O" : "X";
+
+    locations.push(location);
     
     // setState tells react that component + it's children need to be re-rendered with 
     // updated state:
     this.setState({
       history: history.concat([{
         squares: squares,
+        locations: locations
       }]),
       stepNumber: history.length,
-      turn: turn
+      turn: turn,
     }); 
   }
   
@@ -114,11 +126,10 @@ class Game extends React.Component {
     const current = history[this.state.stepNumber];
     const winner = calculateWinner(current.squares);
     const gameOver = isGameOver(current.squares);
-
+    
+    // Display the location for each move in the format (col, row) in the move history list.
     const moves = history.map((step, move) => {
-      let desc = move ?
-        'Move #' + move :
-        'Game start';
+      let desc = (move) ? '#' + move + ' (' + step.locations[move-1] + ')' : 'Game start';
       
       return (
         <li key={move}>
