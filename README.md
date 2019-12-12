@@ -1,4 +1,4 @@
-## Tic Tac Toe!
+# Tic Tac Toe! 
 
 This is the "Tutorial:Intro to React". It's a simple implementation of the classic [Tic-Tac-Toe](https://en.wikipedia.org/wiki/Tic-tac-toe) game, aka 'noughts and crosses' in British English.
 
@@ -7,14 +7,18 @@ Did you know that noughts and crosses was one of the first playable computer gam
 Tutorial URL:
 [https://reactjs.org/tutorial/tutorial.html](https://reactjs.org/tutorial/tutorial.html)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The extra improvements outside the tutorial which I implemented:
 
-- [ ] Display the location for each move in the format (col, row) in the move history list.
+- [x] Display the location for each move in the format (col, row) in the move history list.
 - [x] Bold the currently selected item in the move list.
-- [x] Rewrite Board to use ~~two~~ three loops to make the squares instead of hardcoding them.
+- [x] Rewrite Board to use two loops to make the squares instead of hardcoding them.
 - [ ] Add a toggle button that lets you sort the moves in either ascending or descending order.
 - [x] When someone wins, highlight the three squares that caused the win.
 - [x] When no one wins, display a message about the result being a draw.
+
+---
+
+*This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).*
 
 ## Available Scripts
 
