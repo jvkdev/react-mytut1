@@ -27,5 +27,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "bootstrap": "^4.4.1",
+    "classnames": "^2.2.6",
+    "lodash": "^4.17.15",
+    "node-sass-chokidar": "^1.4.0",
+    "prop-types": "^15.7.2"
   }
 }
