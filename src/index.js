@@ -97,7 +97,7 @@ class Game extends React.Component {
     const col = i % 3;
     const location = (col + 1) + ',' + (row + 1);
 
-    if (calculateWinner(squares)[0] || squares[i]) {
+    if (this.calculateWinner(squares)[0] || squares[i]) {
       return;
     }    
     squares[i] = this.state.turn;
@@ -119,61 +119,112 @@ class Game extends React.Component {
   }
   
   toggleSort = () => {
+    // update state, re-renders component
     this.setState({ 
         sort: this.state.sort ? false : true
     });
   }
 
   jumpTo(step) {
+    // update state, re-renders component
     this.setState({
       stepNumber: step,
       xIsNext: (step % 2) === 0,
     });
   }
 
-  render() {
-    let history = this.state.history;
-    const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
-    const gameOver = isGameOver(current.squares);
-
-    const { sort } = this.state;
+  compileHistoryList = (step, move) => {
+    let desc = (move) ? '(' + step.locations[move-1] + ')' : 'Game start';
     
-    // Display the location for each move in the format (col, row) in the move history list.
-    let moves = history.map((step, move) => {
-      let desc = (move) ? '(' + step.locations[move-1] + ')' : 'Game start';
-      
-      return (
-        <li key={move}>
-          <button 
-            onClick={() => this.jumpTo(move)}
-          >
-            {desc} {(move === this.state.stepNumber ? '<' : '')}
-          </button>
-        </li>
-      );
-    });
+    return (
+      <li key={move}>
+        <button 
+          onClick={() => this.jumpTo(move)}
+        >
+          {desc} {(move === this.state.stepNumber ? '<' : '')}
+        </button>
+      </li>
+    );
+  }
 
-    // sort history of moves according to toggle state
-    if (sort) {
-      let arr1 = moves.shift(); // keep game start at the top
-      moves.reverse();
-      moves = [arr1, moves];
-    }
-    
+  sortMoves(moves) {
+    let arr1 = moves.shift(); // keep game start at the top
+    moves.reverse();
+    return [arr1, moves]; // join first element and sorted rest
+  }
+
+  getStatusText(winner, gameOver) {
     let status;
     if (winner[0]) {
       status = 'Winner! ' + winner[0];
     } else if (gameOver) {
       status = 'Draw!';
-    } else {  
+    } else {
       status = 'Player: ' + this.state.turn;
     }
+    return status;
+  }
+
+  isGameOver(squares) {
+    let gameOver = true;
+    // game is over when all squares have noughts or crosses, ie not NULL
+    for (var i=0; i<9; i++) {
+      gameOver = (squares[i] == null) ? false : true;
+      if (!gameOver) break;
+    }
+    return gameOver;
+  }
+  
+  calculateWinner(squares) {
+    // all winning combinations
+    const lines = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+  
+    // iterate through each winning combo
+    for (let i = 0; i < lines.length; i++) {
+      const [a, b, c] = lines[i];
+      // if all 3 square positions of combo exist in squares array, then win
+      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        return [
+          squares[a],
+          [a,b,c]
+        ];
+      }
+    }
+    // else false
+    return [
+      null, 
+      null
+    ];
+  }
+
+  render() {
+    let history = this.state.history;
+    const current = history[this.state.stepNumber];
+    const winner = this.calculateWinner(current.squares);
+    const gameOver = this.isGameOver(current.squares);
+
+    const { sort } = this.state;
+    
+    // Display the location for each move in the format (col, row) in the move history list.
+    let moves = history.map(this.compileHistoryList);
+
+    // sort history of moves according to toggle state
+    moves = (sort) ? this.sortMoves(moves) : moves;
+    
+    let status = this.getStatusText(winner, gameOver);
     
     return (
-    //   <div className="d-flex p-4 border rounded align-items-center w-100">
-
       <div className="game p-3 border rounded" >
+        {/* Board */}
         <div className="game-board">
           <Board 
             squares={current.squares}
@@ -181,10 +232,12 @@ class Game extends React.Component {
             hiliteSquares={winner[1]}
           />
         </div>
+        { /* Status panel */ }
         <div className="game-info d-flexs p-3 border rounded">
           <div>{status}</div>
           <ol>{moves}</ol>
         </div>
+        { /* Sort control */ }
         <div className="d-flex p-4 ml-4 border rounded align-items-center">
           <span>Sort ↕&nbsp; </span>
            <Switch theme="default" className="d-flex" enabled={sort} onStateChanged={this.toggleSort} />
@@ -193,41 +246,6 @@ class Game extends React.Component {
       </div>
     );
   }
-}
-
-function isGameOver(squares) {
-  let gameOver = true;
-  for (var i=0; i<9; i++) {
-    gameOver = (squares[i] == null) ? false : true;
-    if (!gameOver) break;
-  }
-  return gameOver;
-}
-
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6],
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return [
-        squares[a],
-        [a,b,c]
-      ];
-    }
-  }
-  return [
-    null, 
-    null
-  ];
 }
 
 // ========================================
